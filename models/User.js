@@ -1,4 +1,5 @@
 const {model, Schema} = require('mongoose')
+const jwt = require('jsonwebtoken')
 
 const UserSchema = new Schema(
   {
@@ -12,7 +13,6 @@ const UserSchema = new Schema(
     type: String, 
     required: true,
     unique: true,
-    minlength: 3,
   }, 
   password:{
     type: String, 
@@ -24,12 +24,15 @@ const UserSchema = new Schema(
  }
 )
 
-
 UserSchema.pre("save", async function(next){
- if(!this.isModified("password")){
-   next()
- }
-})
+  if(!this.isModified("password")){
+     next()
+   }
+  })
+
+UserSchema.methods.getSignedJwtToken = function() {
+  return jwt.sign({id: this._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE});
+}
 
 //Hides the password and __v (response)
 UserSchema.methods.toJSON = function() {
@@ -38,5 +41,10 @@ UserSchema.methods.toJSON = function() {
   user.uid = _id;
   return user
 }
+
+
+
+
+
 
 module.exports = model('User', UserSchema)

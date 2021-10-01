@@ -1,9 +1,9 @@
 // blue print for the error response
 class ErrorResponse extends Error {
-  constructor(message, status){
+  constructor(message, statusCode) {
     super(message);
-    this.statusCode = statusCode
+    this.statusCode = statusCode;
   }
 }
 
-module.exports = ErrorResponse
+module.exports = ErrorResponse;

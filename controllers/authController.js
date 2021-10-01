@@ -1,12 +1,17 @@
 const bcrypt = require('bcryptjs')
 const User = require('../models/User')
+const ErrorResponse = require('../utils/errorResponse')
+
 
 exports.signup = async (req, res, next) => {
   //checking for existent email
   const { email , name, password} = req.body
-  const testEmail = await User.findOne({email}); // {email: req.body.email}
+  if (!name || !email || !password) {
+    return next(new ErrorResponse("Please provide an name, email and password", 400));
+  }
+  const testEmail = await User.findOne({email});
   if (testEmail) {
-    return res.status(500).json({message: "Email already in use"});
+    return next(new ErrorResponse("Email already in use", 400))
   }
   //creating the new User and hashing the password
   const user = new User({name, email, password});
@@ -14,9 +19,9 @@ exports.signup = async (req, res, next) => {
     const salt = bcrypt.genSaltSync();
     user.password = bcrypt.hashSync(req.body.password, salt);
     user.save();
-    return res.status(201).json(user);
+    sendToken(user, 200, res);
   } catch (error) {
-    return res.status(500).json({message: "Couldn't create the user"});
+    next(error)
   }
 }
 exports.login = async (req, res, next) => {
@@ -24,15 +29,14 @@ exports.login = async (req, res, next) => {
   const user = await User.findOne({email})
   //checking if the user exist
   if(!user){
-    return res.status(404).json({message: 'Please check credentials'})
+    return next(new ErrorResponse("Please check credentials", 401))
   }
   //validating the hashed password
   const validPassword = bcrypt.compare(password, user.password);
   if (!validPassword) {
-    return res.status(404).json({message: "Please check credentials"});
+    return next(new ErrorResponse("Please check credentials", 401))
   }
-  const token = await generateJwt(user._id);
-  return res.status(200).json({user, token});
+  sendToken(user, 200, res);
 }
 exports.forgotPassword = async (req, res, next) => {
   res.send('Forgot Password test');
@@ -40,3 +44,9 @@ exports.forgotPassword = async (req, res, next) => {
 exports.resetPassword = async (req, res, next) => {
   res.send('Reset password test')
 }
+
+//res with the token generated in the User method
+const sendToken = (user, statusCode, res) => {
+  const token = user.getSignedJwtToken();
+  res.status(statusCode).json({ sucess: true, token });
+};
