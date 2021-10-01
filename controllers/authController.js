@@ -20,7 +20,19 @@ exports.signup = async (req, res, next) => {
   }
 }
 exports.login = async (req, res, next) => {
-  res.send('Login Testing');
+  const {email, password} = req.body
+  const user = await User.findOne({email})
+  //checking if the user exist
+  if(!user){
+    return res.status(404).json({message: 'Please check credentials'})
+  }
+  //validating the hashed password
+  const validPassword = bcrypt.compare(password, user.password);
+  if (!validPassword) {
+    return res.status(404).json({message: "Please check credentials"});
+  }
+  const token = await generateJwt(user._id);
+  return res.status(200).json({user, token});
 }
 exports.forgotPassword = async (req, res, next) => {
   res.send('Forgot Password test');
