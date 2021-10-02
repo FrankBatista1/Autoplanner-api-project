@@ -1,4 +1,3 @@
-const bcrypt = require('bcryptjs')
 const User = require('../models/User')
 const ErrorResponse = require('../utils/errorResponse')
 
@@ -11,14 +10,12 @@ exports.signup = async (req, res, next) => {
   }
   const testEmail = await User.findOne({email});
   if (testEmail) {
-    return next(new ErrorResponse("Email already in use", 400))
+    return next(new ErrorResponse("Please provide a valid email", 400))
   }
   //creating the new User and hashing the password
-  const user = new User({name, email, password});
+  const user = await new User({name, email, password});
   try {
-    const salt = bcrypt.genSaltSync();
-    user.password = bcrypt.hashSync(req.body.password, salt);
-    user.save();
+    await user.save();
     sendToken(user, 200, res);
   } catch (error) {
     next(error)
@@ -39,7 +36,14 @@ exports.login = async (req, res, next) => {
   sendToken(user, 200, res);
 }
 exports.forgotPassword = async (req, res, next) => {
-  res.send('Forgot Password test');
+  const {email} = req.body
+  
+  try {
+    return next(new ErrorResponse("Email could not be sent", 404))
+  } catch (error) {
+    console.log(error)
+  }
+
 }
 exports.resetPassword = async (req, res, next) => {
   res.send('Reset password test')

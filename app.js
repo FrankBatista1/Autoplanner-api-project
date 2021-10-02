@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const errorHandler = require("./middlewares/error");
 
 const app = express();
 
@@ -13,7 +14,6 @@ mongoose
       .catch(() => console.log("Could't connect whit the database"))
 
 //middlewares
-const errorHandler = require('./middlewares/error')
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
@@ -26,7 +26,7 @@ app.use('/api/users', require('./routes/user'));
 // app.use('/api/calendar'), require(('./routes/calendar'));
 
 //Error handler leave it as the last piece of middleware
-app.use(errorHandler)
+app.use(errorHandler);
 
 //port connection
 const port = process.env.PORT || 8000;
@@ -34,5 +34,8 @@ const server = app.listen(port, () => {
   console.log('Server Running')
 })
 
-
+process.on("unhandledRejection", (err, promise) => {
+  console.log(`Logged Error: ${err.message}`);
+  server.close(() => process.exit(1));
+});
 
