@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const {deleteUserById, getAllUsers, getUserById} = require('../controllers/userController')
+const {deleteUserById, getUserById, updateUserById} = require('../controllers/userController')
+const {verifyJwt} = require('../middlewares/verifyJwt')
 
-router.get('/user', getAllUsers);
-router.get('/user/:id', getUserById);
-router.delete('/user/:id', deleteUserById);
+
+router.get('/user/:id',verifyJwt, getUserById);
+router.delete('/user/:id', verifyJwt, deleteUserById);
+router.put('../user/:id', verifyJwt, updateUserById)
 
 module.exports = router;

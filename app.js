@@ -21,7 +21,7 @@ app.use(cors());
 //routes 
 app.use('/api/auth', require('./routes/auth'));
 
-//check and delete users for production purposes - could be used by admin
+//to get delete and update user info
 app.use('/api/users', require('./routes/user'));
 // app.use('/api/calendar'), require(('./routes/calendar'));
 

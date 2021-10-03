@@ -1,6 +1,6 @@
 const User = require('../models/User')
 const ErrorResponse = require('../utils/errorResponse')
-
+const bcrypt = require('bcryptjs')
 
 exports.signup = async (req, res, next) => {
   //checking for existent email
@@ -29,7 +29,7 @@ exports.login = async (req, res, next) => {
     return next(new ErrorResponse("Please check credentials", 401))
   }
   //validating the hashed password
-  const validPassword = bcrypt.compare(password, user.password);
+  const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) {
     return next(new ErrorResponse("Please check credentials", 401))
   }

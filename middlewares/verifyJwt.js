@@ -19,13 +19,15 @@ exports.verifyJwt = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const user = await User.findById(decoded.uid);
+    if(decoded.id !== req.params.id){
+      return next(new ErrorResponse("Unauthorized route", 401));
+    }
+    const user = await User.findById(decoded.id);
 
     if (!user) {
       return next(new ErrorResponse("User not found(id)", 404));
     }
-
+    
     req.user = user;
 
     next();
