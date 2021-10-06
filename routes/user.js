@@ -6,6 +6,6 @@ const {verifyJwt} = require('../middlewares/verifyJwt')
 
 router.get('/user/:id',verifyJwt, getUserById);
 router.delete('/user/:id', verifyJwt, deleteUserById);
-router.put('../user/:id', verifyJwt, updateUserById)
+router.put('/user/:id', verifyJwt, updateUserById)
 
 module.exports = router;

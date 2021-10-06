@@ -4,7 +4,7 @@ exports.getUserById = async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id);
   try {
-    return res.status(200).json(user)
+    sendToken(user, 200, res);
   } catch (error) {
     return next(new ErrorResponse("Couldn't get the user", 404));
   }
@@ -28,3 +28,8 @@ exports.deleteUserById = async (req, res) => {
     return next(new ErrorResponse("Couldn't delete the user", 400));
   }
 }
+const sendToken = (user, statusCode, res) => {
+  const name = user.name
+  const events = user.events
+  res.status(statusCode).json({ sucess: true, name, events});
+};

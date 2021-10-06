@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
 const errorHandler = require("./middlewares/error");
+require('dotenv').config();
 
 const app = express();
 
@@ -23,7 +23,8 @@ app.use('/api/auth', require('./routes/auth'));
 
 //to get delete and update user info
 app.use('/api/users', require('./routes/user'));
-// app.use('/api/calendar'), require(('./routes/calendar'));
+
+app.use('/api/events', require('./routes/events'));
 
 //Error handler leave it as the last piece of middleware
 app.use(errorHandler);

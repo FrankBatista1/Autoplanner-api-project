@@ -52,5 +52,6 @@ exports.resetPassword = async (req, res, next) => {
 //res with the token generated in the User method
 const sendToken = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
-  res.status(statusCode).json({ sucess: true, token });
+  const uid = user._id
+  res.status(statusCode).json({ sucess: true, token, uid});
 };

@@ -26,7 +26,6 @@ const UserSchema = new Schema(
       "Please provide a strong password (minimum eight characters, at least one uppercase letter, one lowercase letter and one number)",
     ]
   },
-  events: [Schema.Types.ObjectId],
   resetPasswordToken: String,
   resetPasswordExpire: Date
  }
@@ -43,6 +42,7 @@ UserSchema.pre("save", async function (next) {
 });
 
 UserSchema.methods.getSignedJwtToken = function() {
+  const uid = this._id
   return jwt.sign({id: this._id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE});
 }
 

@@ -6,12 +6,7 @@ const ErrorResponse = require("../utils/errorResponse");
 exports.verifyJwt = async (req, res, next) => {
   let token;
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-  }
+  token = req.headers.authorization;
 
   if (!token) {
     return next(new ErrorResponse("Unauthorized route", 401));
@@ -19,7 +14,7 @@ exports.verifyJwt = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if(decoded.id !== req.params.id){
+    if (decoded.id !== req.params.id) {
       return next(new ErrorResponse("Unauthorized route", 401));
     }
     const user = await User.findById(decoded.id);
@@ -27,7 +22,7 @@ exports.verifyJwt = async (req, res, next) => {
     if (!user) {
       return next(new ErrorResponse("User not found(id)", 404));
     }
-    
+
     req.user = user;
 
     next();
