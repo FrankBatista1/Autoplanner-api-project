@@ -1,7 +1,8 @@
 const Events = require("../models/Events");
+const ErrorResponse = require('../utils/errorResponse')
 
 // identifies the users by the user id
-exports.getEventsOfUser = async (req, res) => {
+exports.getEventsOfUser = async (req, res, next) => {
   const { id } = req.params;
   const userEvents = await Events.find({ uid: id })
   try {
@@ -13,7 +14,7 @@ exports.getEventsOfUser = async (req, res) => {
     return next(new ErrorResponse("Server Error", 500));
   }
 };
-exports.createEventOfUser = async (req, res) => {
+exports.createEventOfUser = async (req, res, next) => {
   const eventToCreate = await Events.create({
     title: req.body.title,
     start: req.body.start,
@@ -28,7 +29,7 @@ exports.createEventOfUser = async (req, res) => {
   }
 };
 
-exports.updateEventsOfUser = async (req, res) => {
+exports.updateEventsOfUser = async (req, res, next) => {
   const eventToUpdate = await Events.findByIdAndUpdate(req.params.id, req.body, { new: true}) 
   try{
     return res.status(202).json(eventToUpdate)

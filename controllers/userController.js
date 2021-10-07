@@ -1,6 +1,7 @@
 const User = require('../models/User')
+const ErrorResponse = require('../utils/errorResponse');
 
-exports.getUserById = async (req, res) => {
+exports.getUserById = async (req, res, next) => {
   const { id } = req.params;
   const user = await User.findById(id);
   try {
@@ -9,7 +10,7 @@ exports.getUserById = async (req, res) => {
     return next(new ErrorResponse("Couldn't get the user", 404));
   }
 }
-exports.updateUserById = async (req, res) => {
+exports.updateUserById = async (req, res, next) => {
   const { id } = req.params;
   const newUser = await User.findByIdAndUpdate(req.body, {new: true});
   try {
@@ -19,7 +20,7 @@ exports.updateUserById = async (req, res) => {
   }
 
 }
-exports.deleteUserById = async (req, res) => {
+exports.deleteUserById = async (req, res, next) => {
   const { id } = req.params;
   const user = await User.findByIdAndDelete(id);
   try{
