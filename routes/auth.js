@@ -4,7 +4,7 @@ const {signup, login, resetPassword, forgotPassword} = require('../controllers/a
 
 router.post('/signup', signup);
 router.post('/login', login);
-router.post('/resetpassword', resetPassword);
+router.put('/resetpassword/:resetToken', resetPassword);
 router.post('/forgotpassword', forgotPassword);
 
 module.exports = router;
