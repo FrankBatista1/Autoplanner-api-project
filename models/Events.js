@@ -13,3 +13,4 @@ const EventsSchema = new Schema({
 })
 
 module.exports = model('Events', EventsSchema)
+

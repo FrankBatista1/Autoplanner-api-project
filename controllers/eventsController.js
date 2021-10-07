@@ -1,10 +1,9 @@
 const Events = require("../models/Events");
 
-
-// identifies the users by the user id 
+// identifies the users by the user id
 exports.getEventsOfUser = async (req, res) => {
   const { id } = req.params;
-  const userEvents = await Events.find({ user: id });
+  const userEvents = await Events.find({ uid: id })
   try {
     if (userEvents.length === 0) {
       return next(new ErrorResponse("User doesn't have events", 404));
@@ -20,7 +19,7 @@ exports.createEventOfUser = async (req, res) => {
     start: req.body.start,
     color: req.body.color,
     url: req.body.url,
-    uid: req.params.id
+    uid: req.params.id,
   });
   try {
     return res.status(201).json(eventToCreate);
@@ -29,3 +28,11 @@ exports.createEventOfUser = async (req, res) => {
   }
 };
 
+exports.updateEventsOfUser = async (req, res) => {
+  const eventToUpdate = await Events.findByIdAndUpdate(req.params.id, req.body, { new: true}) 
+  try{
+    return res.status(202).json(eventToUpdate)
+  }catch(error){
+    return next(new ErrorResponse("Unauthorized route", 401));
+  }
+};
