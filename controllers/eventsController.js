@@ -37,3 +37,12 @@ exports.updateEventsOfUser = async (req, res, next) => {
     return next(new ErrorResponse("Unauthorized route", 401));
   }
 };
+exports.deleteEventOfUser = async (req, res) => {
+  const { id } = req.params;
+  await Events.findByIdAndDelete(id);
+  try {
+    return res.status(203).json({ message: "Succesfully Deleted" });
+  } catch (error) {
+    return next(new ErrorResponse("Couldn't delete event", 401));
+  }
+};
