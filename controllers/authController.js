@@ -90,7 +90,7 @@ exports.resetPassword = async (req, res, next) => {
     });
 
     if (!user) {
-      return next(new ErrorResponse("Invalid token", 400));
+      return next(new ErrorResponse("Invalid link", 400));
     }
 
     user.password = req.body.password;
