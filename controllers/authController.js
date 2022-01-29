@@ -99,7 +99,7 @@ exports.resetPassword = async (req, res, next) => {
 
     await user.save();
 
-    res.status(201).json({d
+    res.status(201).json({
       success: true,
       data: "Password succesfully updated",
       token: user.getSignedJwtToken(),
