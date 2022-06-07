@@ -6,11 +6,6 @@ require('dotenv').config();
 
 const app = express();
 
-let corsOptions = {
-  origin: 'https://autoplanner.netlify.app',
-  optionsSuccessStatus: 200
-}
-
 
 //db connection
 mongoose
@@ -21,14 +16,15 @@ mongoose
 //middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(cors());
 
 //routes 
-app.use('/api/auth',cors(corsOptions), require('./routes/auth'));
+app.use('/api/auth', require('./routes/auth'));
 
 //to get delete and update user info
-app.use('/api/users',cors(corsOptions), require('./routes/user'));
+app.use('/api/users', require('./routes/user'));
 
-app.use('/api/events',cors(corsOptions), require('./routes/events'));
+app.use('/api/events', require('./routes/events'));
 
 //Error handler leave it as the last piece of middleware
 app.use(errorHandler);
