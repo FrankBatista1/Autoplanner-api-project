@@ -22,8 +22,8 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     match: [
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-      "Please provide a strong password (minimum eight characters, at least one uppercase letter, one lowercase letter and one number)",
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      "Please provide a strong password (Minimum eight characters, at least one letter and one number)",
     ],
     select: false,
   },
