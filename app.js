@@ -6,9 +6,9 @@ require('dotenv').config();
 
 const app = express();
 
-
 //db connection
 mongoose
+      .set('strictQuery', true)
       .connect(process.env.DB_URL)
       .then(() => console.log('Server connected'))
       .catch(() => console.log("Could't connect whit the database"))
